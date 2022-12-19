@@ -30,7 +30,13 @@ var images = [
   'sketch10.jpg',
   'sketch11.jpg',
   'vermont1.jpg',
-  'vermont2.jpg'
+  'vermont2.jpg',
+  '2022-0.jpg',
+  '2022-1.jpg',
+  '2022-2.jpg',
+  '2022-3.jpg',
+  '2022-4.jpg',
+  '2022-5.jpg'
 ];
 
 var random = _.shuffle(images);
