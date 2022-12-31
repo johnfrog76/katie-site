@@ -72,6 +72,10 @@ h1 {
     font-weight: 700;
 }
 
+.link-color {
+    font-weight: bolder;
+}
+
 a:link, a:visited {
     color: var(--main-hyperlink-color);
 }
