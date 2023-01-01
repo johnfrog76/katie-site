@@ -1,49 +1,30 @@
 
 var currentYear = new Date().getFullYear();
-var images = [
-  'bern10.jpg',
-  'bern11.jpg',
-  //'bhs1.jpg',
-  'ee-award.jpg',
-  'emergingArtistFest.jpg',
-  //'friends10.jpg',
-  'IMG_0108.jpg',
-  'IMG_0264.jpg',
-  'IMG_0265.jpg',
-  'IMG_0280.jpg',
-  'IMG_04172.jpg',
-  'IMG_4675.jpg',
-  'IMG_5472.jpg',
-  'katie-bg.jpg',
-  'katie1.jpg',
-  'katie2.jpg',
-  'keys10.jpg',
-  //'kw-alto1.jpg',
-  'kw9.jpg',
-  'mjf1.jpg',
-  'mjf2.jpg',
-  //'monterey1.jpg',
-  'royalroom.jpg',
-  'sketch1.jpg',
-  'sketch2.jpg',
-  'sketch3.jpg',
-  'sketch10.jpg',
-  'sketch11.jpg',
-  'vermont1.jpg',
-  'vermont2.jpg',
-  '2022-0.jpg',
-  '2022-1.jpg',
-  '2022-2.jpg',
-  '2022-3.jpg',
-  '2022-4.jpg',
-  '2022-5.jpg'
-];
 
-var random = _.shuffle(images);
-
-$(function () {
-  $('section').hide();
-  $('#homeSection').show();
+var renderContent = (images, youtubes, soundclouds) => {
+  var random = _.shuffle(images);
+  var videoCollection = youtubes.map((embedCode) => {
+    return `<iframe src="https://www.youtube.com/embed/${embedCode}"
+      frameborder="0"
+      allow="autoplay;
+      encrypted-media"
+      allowfullscreen></iframe>`
+    });
+  var soundcloudCollection = soundclouds.map((trackId) => {
+    return `<iframe class="soundcloud-item" frameborder="0"
+      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
+    </iframe>`
+  });
+  var galleryCollection = random.map((image, idx) => {
+    const cssClass = idx % 6 === 0 ? 'grid-item--width2' : '';
+    return `<div class="grid-item ${cssClass}">
+              <img id="item-${idx}" src="images/${image}" alt="..." />
+            </div>`;
+  });
+  
+  $('.video-content').html(videoCollection.join(''));
+  $('.soundcloud-content').html(soundcloudCollection.join(''));
+  $('.grid').html(galleryCollection.join(''))
 
   $('.nav-link').on('click', function (evt) {
     evt.preventDefault();
@@ -62,25 +43,9 @@ $(function () {
     }
   });
 
-  let markup = '';
-  for (let i = 0; i < random.length; i++) {
-    if (i % 6 === 0) {
-      markup += `<div class="grid-item grid-item--width2">
-      <img id="item-${i}" src="images/${random[i]}" alt="..." />
-    </div>`;
-    } else {
-      markup += `<div class="grid-item">
-        <img id="item-${i}" src="images/${random[i]}" alt="..." />
-      </div>`;
-
-    }
-  }
-
-  $('.grid').html(markup);
-  $('footer .year').text(currentYear);
-
   $('.grid').on('click', function (evt) {
     evt.preventDefault();
+    
     if (evt.target.tagName === 'IMG') {
       $('.pic-modal').css('display', 'flex');
       $('body').addClass('modal-open');
@@ -125,6 +90,16 @@ $(function () {
     });
   });
 
+};
+
+$(function () {
+  $('section').hide();
+  $('#homeSection').show();
+  
+  $.getJSON( "data/data.json", function( data ) {
+    const { images, youtubes, soundclouds } = data;
+    renderContent(images, youtubes, soundclouds);
+  });
+  
+  $('footer .year').text(currentYear);
 });
-
-
