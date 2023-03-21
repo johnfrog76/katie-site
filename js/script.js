@@ -96,10 +96,19 @@ $(function () {
   $('section').hide();
   $('#homeSection').show();
   
-  $.getJSON( "data/data.json", function( data ) {
-    const { images, youtubes, soundclouds } = data;
-    renderContent(images, youtubes, soundclouds);
-  });
+  $.ajax( {
+    dataType: 'json',
+    url: "data/data.json",
+    success: function(data) {
+      const { images, youtubes, soundclouds } = data;
+      renderContent(images, youtubes, soundclouds);    
+    },
+    error: function (err) {
+      console.error(err)
+    },
+    cache: false
+  })
+
   
   $('footer .year').text(currentYear);
 });
