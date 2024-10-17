@@ -47,11 +47,47 @@
     "youtubes": [
         "h_T0zfV4p5Y",
         "IRGtw8XuJyk",
-        "2kgyjlCq4pM",
+        "DbSh37jTI_8",
+        "i42FJuDE_E0",
         "D5B634BM_k0"
     ],
     "soundclouds": [
         "1413375775",
         "1056346372"
+    ],
+    "projects": [
+        {
+            "title": "Test Project 1",
+            "id": "project1",
+            "location": "Basel, Switzerland",
+            "date": "12/1/2023",
+            "thumbnail": "headshot-bos0-2023.jpg",
+            "summary": "this is a summary description of test project",
+            "description": "<p>block of long text and we should allow probably some HTML tags like, <i>italic</i>, <a target=\"_blank\" href=\"https:\/\/www.msn.com\">anchor</a>, <b>bold</b>, paragraph</p><p>paragraph 2 lorem ipsum dolor</p>",
+            "youtube": ["DbSh37jTI_8"],
+            "photos": [ 
+                {"img": "2022-3.jpg", "caption": "caption 1 lorem"},
+                {"img": "2022-4.jpg", "caption": "caption 1 lorem"},
+                {"img": "2022-5.jpg", "caption": "caption 1 lorem"}
+            ]
+        },
+        {
+            "title": "Test Project 2",
+            "id": "project2",
+            "location": "Basel, Switzerland",
+            "date": "12/1/2023",
+            "thumbnail": "emergingArtistFest.jpg",
+            "summary": "this is a summary description of test project",
+            "description": "<p>block of long text and we should allow probably some HTML tags like, <i>italic</i>, <a target=\"_blank\" href=\"https:\/\/www.msn.com\">anchor</a>, <b>bold</b>, paragraph</p><p>paragraph 2 lorem ipsum dolor</p>",
+            "youtube": ["DbSh37jTI_8"],
+            "photos": [ 
+                {"img": "2022-3.jpg", "caption": "caption 1 lorem"},
+                {"img": "2022-4.jpg", "caption": "caption 1 lorem"},
+                {"img": "2022-5.jpg", "caption": "caption 1 lorem"},
+                {"img": "2022-0.jpg", "caption": "caption 1 lorem"},
+                {"img": "2022-1.jpg", "caption": "caption 1 lorem"},
+                {"img": "2022-2.jpg", "caption": "caption 1 lorem"}
+            ]
+        }
     ]
 }
