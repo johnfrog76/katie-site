@@ -11,9 +11,10 @@ var renderContent = (images, youtubes, soundclouds) => {
       allowfullscreen></iframe>`
     });
   var soundcloudCollection = soundclouds.map((trackId) => {
-    return `<iframe class="soundcloud-item" frameborder="0"
-      src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
-    </iframe>`
+    return `<iframe class="soundcloud-item" data-track="${trackId}" frameborder="0"></iframe>`
+    // return `<iframe class="soundcloud-item" frameborder="0"
+    //   src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
+    // </iframe>`
   });
   var galleryCollection = random.map((image, idx) => {
     const cssClass = idx % 6 === 0 ? 'grid-item--width2' : '';
@@ -33,6 +34,16 @@ var renderContent = (images, youtubes, soundclouds) => {
     $('.nav-item').removeClass('active');
     $(this).parent('li').addClass('active');
     $('#' + activeSection).show();
+
+    if (activeSection === 'mediaSection') {  
+      setTimeout(function() {
+        $('.soundcloud-item').each(function(idx, element) {
+          const trackId = $(element).attr('data-track');
+          const template =`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`;
+          $(this).attr('src', template);
+        });
+      }, 500);    
+    }
 
     setTimeout(function () {
       $('#primaryNavToggler').removeClass('show')
