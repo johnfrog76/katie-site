@@ -486,4 +486,40 @@ footer ul li {
     }
 }
 
+/* media collections: two-column grid from sm and up; mobile keeps stacked */
+@media (min-width: 576px) {
+    .media-section .video-content,
+    .media-section .soundcloud-content {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    .media-section .video-content > *,
+    .media-section .soundcloud-content > * {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* 4:3 tiles for media items (modern browsers) */
+.media-section .video-content > *,
+.media-section .soundcloud-content > * {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    overflow: hidden;
+    background: #000; /* fallback while embed loads */
+}
+
+.media-section iframe,
+.media-section video,
+.media-section .soundcloud-item {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border: 0;
+}
+
 
