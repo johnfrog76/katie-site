@@ -1,0 +1,63 @@
+:root {
+    /* base sizes & positions (desktop medium defaults) */
+    --poolA-size: 600px 420px;
+    --poolB-size: 520px 360px;
+    --poolC-size: 420px 300px;
+
+    --poolA-pos: 12% 18%;
+    --poolB-pos: 82% 78%;
+    --poolC-pos: 54% 8%;
+
+    /* mobile/smaller defaults (will be used by bg-washes-mobile) */
+    --mob-poolA-size: 1520px 1260px;
+    --mob-poolB-size: 690px 460px;
+
+    /* layered washes — reference existing theme vars where present, with sensible fallbacks */
+    --bg-washes:
+      radial-gradient(var(--poolA-size) at var(--poolA-pos), rgba(255,112,66,0.36), rgba(255,112,66,0) 30%),
+      radial-gradient(var(--poolB-size) at var(--poolB-pos), rgba(255,128,171,0.30), rgba(255,128,171,0) 36%),
+      radial-gradient(var(--poolC-size) at var(--poolC-pos), rgba(255,213,79,0.18), rgba(255,213,79,0) 42%),
+      linear-gradient(180deg, var(--main-bg-color, #071018), var(--main-bg-color, #071018));
+
+    --bg-washes-mobile:
+      radial-gradient(var(--mob-poolA-size) at 18% 66%, rgba(255,87,34,0.52), rgba(255,87,34,0) 35%),
+      radial-gradient(var(--mob-poolB-size) at 78% 18%, rgba(255,128,171,0.32), rgba(255,128,171,0) 36%),
+      linear-gradient(180deg, var(--main-bg-color, #071018), var(--main-bg-color, #071018));
+}
+
+/* helper class (optional) */
+.bg-washes {
+    background-image: var(--bg-washes);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* Enlarge and reposition gradient pools on wider screens for a more dramatic desktop look */
+@media (min-width: 1200px) {
+    :root {
+        /* increased by ~10% */
+        --poolA-size: 990px 682px;
+        --poolB-size: 836px 572px;
+        --poolC-size: 704px 506px;
+
+        --poolA-pos: 10% 20%;
+        --poolB-pos: 80% 72%;
+        --poolC-pos: 56% 10%;
+    }
+}
+
+/* Further scale for very large (ultra-wide) displays */
+@media (min-width: 1600px) {
+    :root {
+        /* increased by ~10% */
+        --poolA-size: 1320px 902px;
+        --poolB-size: 1100px 770px;
+        --poolC-size: 902px 682px;
+
+        --poolA-pos: 8% 22%;
+        --poolB-pos: 78% 70%;
+        --poolC-pos: 58% 12%;
+    }
+}

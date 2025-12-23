@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,800');
+@import url('gradients.css'); /* add this near top (path relative to styles.css) */
 
 
 :root {
@@ -7,16 +8,17 @@
     --main-bg-color: #071018;                 
     --main-text-color: #E6F3F1;               
     --main-text-inverse-color: #071018;
-    --main-icon-background-color: #B2EBF2;    
+    --main-icon-background-color: #fff9c4;    
     --main-30-opacity: rgba(255,255,255,0.06);
     --main-10-opacity: rgba(255,255,255,0.03);
     --footer-text-color: rgba(255,255,255,0.40);
     --nav-footer-bg-color: rgba(6,12,22,0.85);
     --muted-border: rgba(255,255,255,0.06);   
+    --iframe-border-color: rgba(255,255,255,0.2);
     --main-hyperlink-color: #00BCD4;      /* Material Cyan 500 */
     --main-hyperlink-color-hover: #4DD0E1;/* Material Cyan 300 (hover) */
-    --main-h1-highlight-color: #00BCD4;
-    --main-heading-highlight-color: rgba(0, 188, 212, 0.68);
+    --main-h1-highlight-color: #fdd835; /* Material Yellow 500 */
+    --main-heading-highlight-color: #fffde7; /* Material Yellow 100 */
 }
 
 html, body {
@@ -25,18 +27,12 @@ html, body {
 
 body {
     background-color: var(--main-bg-color);
-    background-image: url("bg-washes.svg");
+    /* use the layered gradients from gradients.css */
+    background-image: var(--bg-washes);
     background-repeat: no-repeat;
     background-position: center center;
-    background-attachment: fixed; /* optional — may be flaky on mobile */
-    /* OPTION A — stretch to exactly fill width & height (distorts image) */
-    background-size: 100% 100%;
-
-    /* OPTION B — preserve aspect ratio and fill viewport (crop instead of distort)
-       use this instead of the line above if you prefer cropping over stretching:
-       background-size: cover;
-    */
-
+    background-attachment: fixed;
+    background-size: cover;
     color: var(--main-text-color);
     font-family: Roboto, sans-serif;
     font-weight: 300;
@@ -60,6 +56,10 @@ h1 {
     text-transform: uppercase;
     font-size: 3em;
     font-weight: 700;
+}
+
+h3 {
+    margin: 0.5rem 0;;
 }
 
 .link-color {
@@ -143,6 +143,7 @@ a:hover {
 }
 
 .social {
+    margin-top: 2rem;
     width: 100%;
     display: flex;
     align-items: center;
@@ -467,22 +468,21 @@ footer ul li {
 }
 
 @media (max-width: 991.98px) {
-    /* show toggler for collapsed (mobile/tablet) navbar */
-    .navbar-expand-lg .navbar-toggler {
-        display: flex !important;
-        visibility: visible !important;
-        pointer-events: auto !important;
-        align-items: center;
-        justify-content: center;
+    /* mobile/tablet: vertical left-border for the active nav item */
+    .navbar-expand-lg .navbar-nav .nav-item.active .nav-link,
+    .navbar-expand-lg .navbar-nav .nav-link.active {
+        color: var(--main-text-color) !important;   /* bright/white-ish text */
+        font-weight: 700;
+        background: transparent;
+        border-left: 4px solid var(--main-h1-highlight-color);
+        padding-left: calc(0.75rem + 4px); /* keep spacing when border added */
+        box-sizing: border-box;
     }
 
-    /* closed stacks bars vertically; open uses inline-block so bars can overlap for the X */
-    .navbar-expand-lg .navbar-toggler.collapsed {
-        display: flex !important;
-        flex-direction: column;
-    }
-    .navbar-expand-lg .navbar-toggler:not(.collapsed) {
-        display: inline-block !important;
+    /* slightly reduce visual weight for non-active links so active stands out */
+    .navbar-expand-lg .navbar-nav .nav-link {
+        color: rgba(230,243,241,0.9);
+        font-weight: 400;
     }
 }
 
@@ -509,7 +509,8 @@ footer ul li {
     aspect-ratio: 4 / 3;
     width: 100%;
     overflow: hidden;
-    background: #000; /* fallback while embed loads */
+    background: #000;
+    border: 1px solid var(--iframe-border-color);
 }
 
 .media-section iframe,
@@ -520,6 +521,36 @@ footer ul li {
     display: block;
     object-fit: cover;
     border: 0;
+}
+
+/* override for mobile: use the mobile gradient set for warmer/denser washes */
+@media (max-width: 767.98px) {
+    body {
+        background-image: var(--bg-washes-mobile);
+        background-attachment: scroll; /* better on mobile */
+        background-size: cover;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .grid {
+        width: 100% !important;
+    }
+    
+    .grid img,
+    .grid .grid-item > img,
+    .grid-item img {
+        width: 100% !important;
+        height: auto !important;
+        display: block;
+        object-fit: cover; /* optional: use 'contain' if you don't want any cropping */
+    }
+
+    /* ensure grid items don't exceed the viewport on narrow screens */
+    .grid-item {
+        width: auto !important;
+        max-width: 100%;
+    }
 }
 
 
