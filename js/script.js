@@ -1,4 +1,3 @@
-
 var currentYear = new Date().getFullYear();
 
 var renderContent = (images, youtubes, soundclouds) => {
@@ -45,9 +44,25 @@ var renderContent = (images, youtubes, soundclouds) => {
       }, 500);    
     }
 
-    setTimeout(function () {
-      $('#primaryNavToggler').removeClass('show')
-    }, 200);
+    // replace manual removeClass('show') with proper Bootstrap collapse API
+    var $collapse = $('#primaryNavToggler');
+    var $toggler = $('.navbar-toggler');
+
+    if ($collapse.length) {
+      // request collapse hide (Bootstrap will animate)
+      $collapse.collapse('hide');
+
+      // when fully hidden ensure toggler returns to collapsed state / aria
+      $collapse.one('hidden.bs.collapse', function () {
+        $toggler.addClass('collapsed').attr('aria-expanded', 'false');
+      });
+
+      // as a safety fallback, force collapsed state shortly after click
+      setTimeout(function () {
+        $toggler.addClass('collapsed').attr('aria-expanded', 'false');
+        $collapse.removeClass('show');
+      }, 350);
+    }
 
     if (activeSection === 'gallerySection') {
       $grid.masonry('layout');

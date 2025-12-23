@@ -1,52 +1,42 @@
-
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,800');
 
 
 :root {
+    /* dark theme core */
+    --main-bg-color: #071018;                 /* page background */
+    --main-text-color: #E6F3F1;               /* primary text (light) */
+    --main-text-inverse-color: #071018;
+    --main-icon-background-color: #00BFA5;    /* accent (teal) */
+    --main-30-opacity: rgba(255,255,255,0.06);/* overlays */
+    --main-10-opacity: rgba(255,255,255,0.03);
+    --footer-text-color: rgba(255,255,255,0.40);
+    --nav-footer-bg-color: rgba(6,12,22,0.85);/* header/footer background */
+    --muted-border: rgba(255,255,255,0.06);   /* subtle border */
+    --main-hyperlink-color: #00E6C3;
+    --main-hyperlink-color-hover: #B8FFF0;
+    --main-h1-highlight-color: #00FFD1;
+    --main-heading-highlight-color: #A7DCD1;
+}
 
-    /* --main-bg-color: white;
-    --main-text-color: #212529;
-    --main-text-inverse-color: white;
-    --main-icon-background-color: #1565C0;
-    --main-30-opacity: rgba(0, 0, 0, 0.3);
-    --main-10-opacity: rgba(0, 0, 0, 0.1);
-    --nav-footer-bg-color: #f8f9fa; 
-    --main-hyperlink-color-hover: #0056b3;
-    --main-hyperlink-color: #007bff; 
-    --main-h1-highlight-color: #1565C0;
-    --main-heading-highlight-color: #37474F;
-    */
-
-    --main-bg-color: white;
-    --main-text-color: #212529;
-    --main-text-inverse-color: white;
-    --main-icon-background-color: #00695C;
-    --main-30-opacity: rgba(0, 0, 0, 0.3);
-    --main-10-opacity: rgba(0, 0, 0, 0.1);
-    --nav-footer-bg-color: #f8f9fa; 
-    --main-hyperlink-color-hover: #004D40;
-    --main-hyperlink-color: #00695C; 
-    --main-h1-highlight-color: #00695C;
-    --main-heading-highlight-color: #37474F;
- 
-    /*
-     --main-bg-color: #FCE4EC;
-    --main-text-color: #212529;
-    --main-text-inverse-color: white;
-    --main-icon-background-color: #333;
-    --main-30-opacity: rgba(0, 0, 0, 0.3);
-    --main-10-opacity: rgba(0, 0, 0, 0.1);
-    --nav-footer-bg-color: #F8BBD0;
-    --main-hyperlink-color-hover: #880E4F;
-    --main-hyperlink-color: #C2185B;
-    --main-h1-highlight-color: #880E4F;
-    --main-heading-highlight-color: #37474F; 
-    */
+html, body {
+    height: 100%;
 }
 
 body {
     background-color: var(--main-bg-color);
+    background-image: url("bg-washes.svg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed; /* optional — may be flaky on mobile */
+    /* OPTION A — stretch to exactly fill width & height (distorts image) */
+    background-size: 100% 100%;
+
+    /* OPTION B — preserve aspect ratio and fill viewport (crop instead of distort)
+       use this instead of the line above if you prefer cropping over stretching:
+       background-size: cover;
+    */
+
     color: var(--main-text-color);
     font-family: Roboto, sans-serif;
     font-weight: 300;
@@ -85,6 +75,7 @@ a:hover {
 }
 
 .navbar.bg-light {
+    border-top: 1px solid var(--muted-border) !important;
     background-color: var(--nav-footer-bg-color) !important;
 }
 
@@ -193,6 +184,81 @@ a:hover {
     color: var(--main-text-color);
 }
 
+/* make the navbar-toggler icon inverse / themed */
+.navbar-light .navbar-toggler {
+    border-color: var(--muted-border);
+    background-color: transparent;
+    padding: .4rem .6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* navbar toggler: absolute-positioned bars so X is perfectly centered */
+.navbar-toggler {
+    position: relative;
+    display: inline-block !important;
+    width: 44px;
+    height: 38px;
+    padding: 0.25rem;
+    background: transparent !important;
+    border: 1px solid var(--muted-border);
+    color: var(--main-text-color);
+    box-sizing: border-box;
+}
+
+/* ensure any SVG icon is hidden */
+.navbar-light .navbar-toggler-icon {
+    background-image: none !important;
+    display: none !important;
+}
+
+/* bars are absolute so they can overlap cleanly for the X */
+.navbar-toggler .bar {
+    position: absolute;
+    left: 50%;
+    width: 28px;
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 2px;
+    transform-origin: center;
+    transition: transform .32s cubic-bezier(.2,.9,.2,1), opacity .22s ease;
+}
+
+/* closed positions (stacked visually, centered) */
+.navbar-toggler .bar:nth-child(1) { top: 26%; transform: translate(-50%,-50%); }
+.navbar-toggler .bar:nth-child(2) { top: 50%; transform: translate(-50%,-50%); }
+.navbar-toggler .bar:nth-child(3) { top: 74%; transform: translate(-50%,-50%); }
+
+/* slightly larger touch target on mobile (optional) */
+@media (max-width: 575px) {
+    .navbar-toggler { width: 48px; height: 42px; }
+    .navbar-toggler .bar { width: 32px; height: 3.5px; }
+}
+
+/* open state: overlap and rotate into an X (Bootstrap removes .collapsed when open) */
+.navbar-toggler:not(.collapsed) .bar:nth-child(1) {
+    top: 50%;
+    transform: translate(-50%,-50%) rotate(45deg);
+}
+.navbar-toggler:not(.collapsed) .bar:nth-child(2) {
+    top: 50%;
+    transform: translate(-50%,-50%) scaleX(.2);
+    opacity: 0;
+}
+.navbar-toggler:not(.collapsed) .bar:nth-child(3) {
+    top: 50%;
+    transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+/* focus / hover states */
+.navbar-toggler:focus,
+.navbar-toggler:hover {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,191,165,0.10);
+    opacity: 0.98;
+}
+
 #prev, #next {
     color: #fff;
     background-color: var(--main-30-opacity);
@@ -233,6 +299,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     margin: 10px;
+    min-width: 50px
 }
 
 .social span::before {
@@ -291,11 +358,24 @@ a:hover {
     }
 }
 
-.image-wrap img {
-    width: 100%;
+/* ensure media and inline SVGs never exceed their container */
+img,
+picture,
+video,
+iframe,
+svg {
+    max-width: 100%;
     height: auto;
+    display: block; /* avoid inline whitespace issues */
 }
 
+/* specific image wrapper rules (keeps existing layout behavior) */
+.image-wrap img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover; /* optional: maintain crop behavior */
+}
 
 .grid {
     width: 100%;
@@ -330,7 +410,7 @@ main {
 }
 
 footer {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--muted-border);
     position: absolute;
     bottom: 0px;
     left: 0;
@@ -338,6 +418,8 @@ footer {
     padding: 0 1.5rem;
     z-index: 2;
     background-color: var(--nav-footer-bg-color);
+    font-size: 70%;
+    color: var(--footer-text-color)
 }
 
 footer ul {
@@ -348,3 +430,60 @@ footer ul {
 footer ul li {
     display: inline;
 }
+
+/* closed: stack bars vertically */
+.navbar-toggler.collapsed {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 38px;
+    padding: 0.25rem;
+    background: transparent !important;
+    border: 1px solid var(--muted-border);
+    color: var(--main-text-color);
+}
+
+/* open: use inline-block so bars can overlap/transform into an X */
+.navbar-toggler:not(.collapsed) {
+    display: inline-block !important;
+    width: 44px;
+    height: 38px;
+    padding: 0.25rem;
+    background: transparent !important;
+    border: 1px solid var(--muted-border);
+    color: var(--main-text-color);
+}
+
+/* show/hide hamburger exactly at Bootstrap's lg breakpoint (992px) */
+@media (min-width: 992px) {
+    /* hide toggler for expanded (desktop) navbar */
+    .navbar-expand-lg .navbar-toggler {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* show toggler for collapsed (mobile/tablet) navbar */
+    .navbar-expand-lg .navbar-toggler {
+        display: flex !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* closed stacks bars vertically; open uses inline-block so bars can overlap for the X */
+    .navbar-expand-lg .navbar-toggler.collapsed {
+        display: flex !important;
+        flex-direction: column;
+    }
+    .navbar-expand-lg .navbar-toggler:not(.collapsed) {
+        display: inline-block !important;
+    }
+}
+
+
