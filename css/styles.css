@@ -4,19 +4,19 @@
 
 :root {
     /* dark theme core */
-    --main-bg-color: #071018;                 /* page background */
-    --main-text-color: #E6F3F1;               /* primary text (light) */
+    --main-bg-color: #071018;                 
+    --main-text-color: #E6F3F1;               
     --main-text-inverse-color: #071018;
-    --main-icon-background-color: #00BFA5;    /* accent (teal) */
-    --main-30-opacity: rgba(255,255,255,0.06);/* overlays */
+    --main-icon-background-color: #B2EBF2;    
+    --main-30-opacity: rgba(255,255,255,0.06);
     --main-10-opacity: rgba(255,255,255,0.03);
     --footer-text-color: rgba(255,255,255,0.40);
-    --nav-footer-bg-color: rgba(6,12,22,0.85);/* header/footer background */
-    --muted-border: rgba(255,255,255,0.06);   /* subtle border */
-    --main-hyperlink-color: #00E6C3;
-    --main-hyperlink-color-hover: #B8FFF0;
-    --main-h1-highlight-color: #00FFD1;
-    --main-heading-highlight-color: #A7DCD1;
+    --nav-footer-bg-color: rgba(6,12,22,0.85);
+    --muted-border: rgba(255,255,255,0.06);   
+    --main-hyperlink-color: #00BCD4;      /* Material Cyan 500 */
+    --main-hyperlink-color-hover: #4DD0E1;/* Material Cyan 300 (hover) */
+    --main-h1-highlight-color: #00BCD4;
+    --main-heading-highlight-color: rgba(0, 188, 212, 0.68);
 }
 
 html, body {
