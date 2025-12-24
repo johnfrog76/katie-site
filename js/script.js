@@ -124,8 +124,8 @@ var renderContent = (images, youtubes, soundclouds) => {
 
 var renderEvents = () => {
   const appId = '817663ab377e14aae6be7b2c61a3bfd8';
-  const artistName = 'Katie Webster';
-  const apiUrl = `https://rest.bandsintown.com/artists/${encodeURIComponent(artistName)}/events?app_id=${appId}`;
+  const artistId = '15626560';
+  const apiUrl = `https://rest.bandsintown.com/artists/id_${artistId}/events?app_id=${appId}&date=upcoming`;
 
   $.ajax({
     dataType: 'json',
@@ -136,16 +136,31 @@ var renderEvents = () => {
         console.log('Fetched events:', events);
         var eventsCollection = events.map((event) => {
           const eventDate = new Date(event.datetime).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-          const venue = event.venue.name;
+          const eventDateObj = new Date(event.starts_at);
+          const startTime = eventDateObj.toLocaleTimeString('en-US', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true
+          });
+          // Compute EST or EDT based on the event date
+          const tzString = eventDateObj.toLocaleString('en-US', { 
+            timeZone: 'America/New_York',
+            timeZoneName: 'short'
+          });
+          const tzName = tzString.split(' ').pop();
+          // same as event.title
+          // const venueName = event.venue.name;
           const city = event.venue.city;
           const region = event.venue.region ? `, ${event.venue.region}` : '';
-          
+          const address = event.venue.street_address || '';
           return `<div class="event-item">
-                    <h4>${event.title || venue}</h4>
-                    <p><strong>${eventDate}</strong></p>
-                    <p>${venue}</p>
-                    <p>${city}${region}</p>
-                    ${event.description ? `<p>${event.description}</p>` : ''}
+                    <p>
+                      <strong>${event.title}</strong><br>
+                      <span>${eventDate} at ${startTime} ${tzName}</span><br>
+                      ${address ? `<span>${address} - ${city}${region}</span><br>` : ''}
+                      ${event.description ? `<span>${event.description}</span><br>` : ''}
+                      <a href="${event.url}" target="_blank" rel="noopener noreferrer">View on Bandsintown</a>
+                    </p>
                   </div>`;
         });
         $('.events-content').html(eventsCollection.join(''));
