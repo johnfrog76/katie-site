@@ -15,14 +15,14 @@
     --nav-footer-bg-color: rgba(6,12,22,0.85);
     --muted-border: rgba(255,255,255,0.06);   
     --iframe-border-color: rgba(255,255,255,0.2);
-    --main-hyperlink-color: #00BCD4;      /* Material Cyan 500 */
-    --main-hyperlink-color-hover: #4DD0E1;/* Material Cyan 300 (hover) */
+    --main-hyperlink-color-hover: #76FF03; /* Material Light Green A400 (hover) */
+    --main-hyperlink-color: #64DD17; /* Material Light Green A700 */
     --main-h1-highlight-color: #fdd835; /* Material Yellow 500 */
     --main-heading-highlight-color: #fffde7; /* Material Yellow 100 */
 }
 
 html, body {
-    height: 100%;
+    min-height: 100%;
 }
 
 body {
@@ -31,11 +31,41 @@ body {
     background-image: var(--bg-washes);
     background-repeat: no-repeat;
     background-position: center center;
-    background-attachment: fixed;
     background-size: cover;
     color: var(--main-text-color);
     font-family: Roboto, sans-serif;
     font-weight: 300;
+}
+
+/* Improve scrolling on mobile (iOS): avoid `background-attachment: fixed` which
+   can cause hard edges while scrolling. Provide a desktop-only fixed layer
+   so large-screen users keep the fixed effect. */
+@media (min-width: 992px) {
+    body {
+        /* remove the background image from the body to avoid duplicate painting */
+        background-image: none;
+        background-color: var(--main-bg-color);
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image: var(--bg-washes);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        pointer-events: none;
+        transform: translateZ(0); /* encourage GPU compositing */
+    }
+}
+
+/* Mobile / touch devices: ensure scrolling uses a non-fixed background to avoid iOS rendering artifacts */
+@supports (-webkit-overflow-scrolling: touch) {
+    body {
+        background-attachment: scroll;
+    }
 }
 
 body.modal-open {
@@ -48,6 +78,11 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
     font-size: 2em;
     color: var(--main-heading-highlight-color);
+}
+
+p {
+    line-height: 1.6em;
+    font-size: 1.1rem;
 }
 
 h1 {
@@ -421,6 +456,17 @@ footer {
     background-color: var(--nav-footer-bg-color);
     font-size: 70%;
     color: var(--footer-text-color)
+}
+
+.about-section ul {
+    margin: 0 0 0 0.5rem;
+    padding: 0 0 0 0.5rem;
+}
+
+.about-section ul li {
+    line-height: 1.6em;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
 }
 
 footer ul {

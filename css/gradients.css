@@ -20,8 +20,8 @@
       linear-gradient(180deg, var(--main-bg-color, #071018), var(--main-bg-color, #071018));
 
     --bg-washes-mobile:
-      radial-gradient(var(--mob-poolA-size) at 18% 66%, rgba(255,87,34,0.52), rgba(255,87,34,0) 35%),
-      radial-gradient(var(--mob-poolB-size) at 78% 18%, rgba(255,128,171,0.32), rgba(255,128,171,0) 36%),
+      radial-gradient(var(--mob-poolA-size) at 80px 650px, rgba(255,87,34,0.52), rgba(255,87,34,0) 35%),
+      radial-gradient(var(--mob-poolB-size) at 290px 200px, rgba(255,128,171,0.32), rgba(255,128,171,0) 36%),
       linear-gradient(180deg, var(--main-bg-color, #071018), var(--main-bg-color, #071018));
 }
 
@@ -29,7 +29,7 @@
 .bg-washes {
     background-image: var(--bg-washes);
     background-repeat: no-repeat;
-    background-position: center center;
+    background-position: top;
     background-size: cover;
     background-attachment: fixed;
 }
