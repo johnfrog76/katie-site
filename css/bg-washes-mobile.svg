@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="baseGradM" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#071018"/>
+      <stop offset="60%" stop-color="#0A1C2A"/>
+      <stop offset="100%" stop-color="#081018"/>
+    </linearGradient>
+
+    <!-- warmer mobile accents: pink + yellow a bit stronger -->
+    <radialGradient id="pinkGlowM" cx="0.82" cy="0.78" r="0.6">
+      <stop offset="0%" stop-color="#FF94C9" stop-opacity="0.30"/>
+      <stop offset="45%" stop-color="#FF94C9" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="yellowGlowM" cx="0.56" cy="0.12" r="0.5">
+      <stop offset="0%" stop-color="#FFE08A" stop-opacity="0.20"/>
+      <stop offset="48%" stop-color="#FFE08A" stop-opacity="0.02"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="greenPoolM" cx="0.18" cy="0.66" r="0.9">
+      <stop offset="0%" stop-color="#00BFA5" stop-opacity="0.40"/>
+      <stop offset="45%" stop-color="#00BFA5" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="softBlurM" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="36"/>
+    </filter>
+  </defs>
+
+  <!-- base -->
+  <rect width="100%" height="100%" fill="url(#baseGradM)"/>
+
+  <!-- larger soft pools -->
+  <g filter="url(#softBlurM)" opacity="0.72" style="mix-blend-mode:overlay">
+    <ellipse cx="900" cy="160" rx="520" ry="360" fill="url(#pinkGlowM)"/>
+    <ellipse cx="680" cy="60" rx="300" ry="220" fill="url(#yellowGlowM)"/>
+    <ellipse cx="180" cy="560" rx="620" ry="480" fill="url(#greenPoolM)"/>
+  </g>
+
+  <!-- slight vignette -->
+  <rect width="100%" height="100%" fill="black" opacity="0.06" style="mix-blend-mode:multiply"/>
+
+</svg>

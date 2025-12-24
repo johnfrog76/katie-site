@@ -1,55 +1,71 @@
-
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/css?family=Work+Sans:400,800');
+@import url('gradients.css'); /* add this near top (path relative to styles.css) */
 
 
 :root {
+    /* dark theme core */
+    --main-bg-color: #071018;                 
+    --main-text-color: #E6F3F1;               
+    --main-text-inverse-color: #071018;
+    --main-icon-background-color: #fff9c4;    
+    --main-30-opacity: rgba(255,255,255,0.06);
+    --main-10-opacity: rgba(255,255,255,0.03);
+    --footer-text-color: rgba(255,255,255,0.40);
+    --nav-footer-bg-color: rgba(6,12,22,0.85);
+    --muted-border: rgba(255,255,255,0.06);   
+    --iframe-border-color: rgba(255,255,255,0.2);
+    --main-hyperlink-color-hover: #76FF03; /* Material Light Green A400 (hover) */
+    --main-hyperlink-color: #64DD17; /* Material Light Green A700 */
+    --main-h1-highlight-color: #fdd835; /* Material Yellow 500 */
+    --main-heading-highlight-color: #fffde7; /* Material Yellow 100 */
+}
 
-    /* --main-bg-color: white;
-    --main-text-color: #212529;
-    --main-text-inverse-color: white;
-    --main-icon-background-color: #1565C0;
-    --main-30-opacity: rgba(0, 0, 0, 0.3);
-    --main-10-opacity: rgba(0, 0, 0, 0.1);
-    --nav-footer-bg-color: #f8f9fa; 
-    --main-hyperlink-color-hover: #0056b3;
-    --main-hyperlink-color: #007bff; 
-    --main-h1-highlight-color: #1565C0;
-    --main-heading-highlight-color: #37474F;
-    */
-
-    --main-bg-color: white;
-    --main-text-color: #212529;
-    --main-text-inverse-color: white;
-    --main-icon-background-color: #00695C;
-    --main-30-opacity: rgba(0, 0, 0, 0.3);
-    --main-10-opacity: rgba(0, 0, 0, 0.1);
-    --nav-footer-bg-color: #f8f9fa; 
-    --main-hyperlink-color-hover: #004D40;
-    --main-hyperlink-color: #00695C; 
-    --main-h1-highlight-color: #00695C;
-    --main-heading-highlight-color: #37474F;
- 
-    /*
-     --main-bg-color: #FCE4EC;
-    --main-text-color: #212529;
-    --main-text-inverse-color: white;
-    --main-icon-background-color: #333;
-    --main-30-opacity: rgba(0, 0, 0, 0.3);
-    --main-10-opacity: rgba(0, 0, 0, 0.1);
-    --nav-footer-bg-color: #F8BBD0;
-    --main-hyperlink-color-hover: #880E4F;
-    --main-hyperlink-color: #C2185B;
-    --main-h1-highlight-color: #880E4F;
-    --main-heading-highlight-color: #37474F; 
-    */
+html, body {
+    min-height: 100%;
 }
 
 body {
     background-color: var(--main-bg-color);
+    /* use the layered gradients from gradients.css */
+    background-image: var(--bg-washes);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
     color: var(--main-text-color);
     font-family: Roboto, sans-serif;
     font-weight: 300;
+}
+
+/* Improve scrolling on mobile (iOS): avoid `background-attachment: fixed` which
+   can cause hard edges while scrolling. Provide a desktop-only fixed layer
+   so large-screen users keep the fixed effect. */
+@media (min-width: 992px) {
+    body {
+        /* remove the background image from the body to avoid duplicate painting */
+        background-image: none;
+        background-color: var(--main-bg-color);
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image: var(--bg-washes);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+        pointer-events: none;
+        transform: translateZ(0); /* encourage GPU compositing */
+    }
+}
+
+/* Mobile / touch devices: ensure scrolling uses a non-fixed background to avoid iOS rendering artifacts */
+@supports (-webkit-overflow-scrolling: touch) {
+    body {
+        background-attachment: scroll;
+    }
 }
 
 body.modal-open {
@@ -64,12 +80,21 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--main-heading-highlight-color);
 }
 
+p {
+    line-height: 1.6em;
+    font-size: 1.1rem;
+}
+
 h1 {
     letter-spacing: 0.75rem;
     color: var(--main-h1-highlight-color);
     text-transform: uppercase;
     font-size: 3em;
     font-weight: 700;
+}
+
+h3 {
+    margin: 0.5rem 0;;
 }
 
 .link-color {
@@ -85,6 +110,7 @@ a:hover {
 }
 
 .navbar.bg-light {
+    border-top: 1px solid var(--muted-border) !important;
     background-color: var(--nav-footer-bg-color) !important;
 }
 
@@ -152,6 +178,7 @@ a:hover {
 }
 
 .social {
+    margin-top: 2rem;
     width: 100%;
     display: flex;
     align-items: center;
@@ -191,6 +218,81 @@ a:hover {
 
 .navbar-light .navbar-nav .nav-link:hover {
     color: var(--main-text-color);
+}
+
+/* make the navbar-toggler icon inverse / themed */
+.navbar-light .navbar-toggler {
+    border-color: var(--muted-border);
+    background-color: transparent;
+    padding: .4rem .6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* navbar toggler: absolute-positioned bars so X is perfectly centered */
+.navbar-toggler {
+    position: relative;
+    display: inline-block !important;
+    width: 44px;
+    height: 38px;
+    padding: 0.25rem;
+    background: transparent !important;
+    border: 1px solid var(--muted-border);
+    color: var(--main-text-color);
+    box-sizing: border-box;
+}
+
+/* ensure any SVG icon is hidden */
+.navbar-light .navbar-toggler-icon {
+    background-image: none !important;
+    display: none !important;
+}
+
+/* bars are absolute so they can overlap cleanly for the X */
+.navbar-toggler .bar {
+    position: absolute;
+    left: 50%;
+    width: 28px;
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 2px;
+    transform-origin: center;
+    transition: transform .32s cubic-bezier(.2,.9,.2,1), opacity .22s ease;
+}
+
+/* closed positions (stacked visually, centered) */
+.navbar-toggler .bar:nth-child(1) { top: 26%; transform: translate(-50%,-50%); }
+.navbar-toggler .bar:nth-child(2) { top: 50%; transform: translate(-50%,-50%); }
+.navbar-toggler .bar:nth-child(3) { top: 74%; transform: translate(-50%,-50%); }
+
+/* slightly larger touch target on mobile (optional) */
+@media (max-width: 575px) {
+    .navbar-toggler { width: 48px; height: 42px; }
+    .navbar-toggler .bar { width: 32px; height: 3.5px; }
+}
+
+/* open state: overlap and rotate into an X (Bootstrap removes .collapsed when open) */
+.navbar-toggler:not(.collapsed) .bar:nth-child(1) {
+    top: 50%;
+    transform: translate(-50%,-50%) rotate(45deg);
+}
+.navbar-toggler:not(.collapsed) .bar:nth-child(2) {
+    top: 50%;
+    transform: translate(-50%,-50%) scaleX(.2);
+    opacity: 0;
+}
+.navbar-toggler:not(.collapsed) .bar:nth-child(3) {
+    top: 50%;
+    transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+/* focus / hover states */
+.navbar-toggler:focus,
+.navbar-toggler:hover {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,191,165,0.10);
+    opacity: 0.98;
 }
 
 #prev, #next {
@@ -233,6 +335,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     margin: 10px;
+    min-width: 50px
 }
 
 .social span::before {
@@ -291,11 +394,24 @@ a:hover {
     }
 }
 
-.image-wrap img {
-    width: 100%;
+/* ensure media and inline SVGs never exceed their container */
+img,
+picture,
+video,
+iframe,
+svg {
+    max-width: 100%;
     height: auto;
+    display: block; /* avoid inline whitespace issues */
 }
 
+/* specific image wrapper rules (keeps existing layout behavior) */
+.image-wrap img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover; /* optional: maintain crop behavior */
+}
 
 .grid {
     width: 100%;
@@ -330,7 +446,7 @@ main {
 }
 
 footer {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid var(--muted-border);
     position: absolute;
     bottom: 0px;
     left: 0;
@@ -338,6 +454,19 @@ footer {
     padding: 0 1.5rem;
     z-index: 2;
     background-color: var(--nav-footer-bg-color);
+    font-size: 70%;
+    color: var(--footer-text-color)
+}
+
+.about-section ul {
+    margin: 0 0 0 0.5rem;
+    padding: 0 0 0 0.5rem;
+}
+
+.about-section ul li {
+    line-height: 1.6em;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
 }
 
 footer ul {
@@ -348,3 +477,126 @@ footer ul {
 footer ul li {
     display: inline;
 }
+
+/* closed: stack bars vertically */
+.navbar-toggler.collapsed {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 38px;
+    padding: 0.25rem;
+    background: transparent !important;
+    border: 1px solid var(--muted-border);
+    color: var(--main-text-color);
+}
+
+/* open: use inline-block so bars can overlap/transform into an X */
+.navbar-toggler:not(.collapsed) {
+    display: inline-block !important;
+    width: 44px;
+    height: 38px;
+    padding: 0.25rem;
+    background: transparent !important;
+    border: 1px solid var(--muted-border);
+    color: var(--main-text-color);
+}
+
+/* show/hide hamburger exactly at Bootstrap's lg breakpoint (992px) */
+@media (min-width: 992px) {
+    /* hide toggler for expanded (desktop) navbar */
+    .navbar-expand-lg .navbar-toggler {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* mobile/tablet: vertical left-border for the active nav item */
+    .navbar-expand-lg .navbar-nav .nav-item.active .nav-link,
+    .navbar-expand-lg .navbar-nav .nav-link.active {
+        color: var(--main-text-color) !important;   /* bright/white-ish text */
+        font-weight: 700;
+        background: transparent;
+        border-left: 4px solid var(--main-h1-highlight-color);
+        padding-left: calc(0.75rem + 4px); /* keep spacing when border added */
+        box-sizing: border-box;
+    }
+
+    /* slightly reduce visual weight for non-active links so active stands out */
+    .navbar-expand-lg .navbar-nav .nav-link {
+        color: rgba(230,243,241,0.9);
+        font-weight: 400;
+    }
+}
+
+/* media collections: two-column grid from sm and up; mobile keeps stacked */
+@media (min-width: 576px) {
+    .media-section .video-content,
+    .media-section .soundcloud-content {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    .media-section .video-content > *,
+    .media-section .soundcloud-content > * {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+/* 4:3 tiles for media items (modern browsers) */
+.media-section .video-content > *,
+.media-section .soundcloud-content > * {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--iframe-border-color);
+}
+
+.media-section iframe,
+.media-section video,
+.media-section .soundcloud-item {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border: 0;
+}
+
+/* override for mobile: use the mobile gradient set for warmer/denser washes */
+@media (max-width: 767.98px) {
+    body {
+        background-image: var(--bg-washes-mobile);
+        background-attachment: scroll; /* better on mobile */
+        background-size: cover;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .grid {
+        width: 100% !important;
+    }
+    
+    .grid img,
+    .grid .grid-item > img,
+    .grid-item img {
+        width: 100% !important;
+        height: auto !important;
+        display: block;
+        object-fit: cover; /* optional: use 'contain' if you don't want any cropping */
+    }
+
+    /* ensure grid items don't exceed the viewport on narrow screens */
+    .grid-item {
+        width: auto !important;
+        max-width: 100%;
+    }
+}
+
+

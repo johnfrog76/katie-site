@@ -1,5 +1,5 @@
-
 var currentYear = new Date().getFullYear();
+var eventsFetched = false;
 
 var renderContent = (images, youtubes, soundclouds) => {
   var random = _.shuffle(images);
@@ -12,9 +12,6 @@ var renderContent = (images, youtubes, soundclouds) => {
     });
   var soundcloudCollection = soundclouds.map((trackId) => {
     return `<iframe class="soundcloud-item" data-track="${trackId}" frameborder="0"></iframe>`
-    // return `<iframe class="soundcloud-item" frameborder="0"
-    //   src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true">
-    // </iframe>`
   });
   var galleryCollection = random.map((image, idx) => {
     const cssClass = idx % 6 === 0 ? 'grid-item--width2' : '';
@@ -25,7 +22,7 @@ var renderContent = (images, youtubes, soundclouds) => {
   
   $('.video-content').html(videoCollection.join(''));
   $('.soundcloud-content').html(soundcloudCollection.join(''));
-  $('.grid').html(galleryCollection.join(''))
+  $('.grid').html(galleryCollection.join(''));
 
   $('.nav-link').on('click', function (evt) {
     evt.preventDefault();
@@ -34,6 +31,12 @@ var renderContent = (images, youtubes, soundclouds) => {
     $('.nav-item').removeClass('active');
     $(this).parent('li').addClass('active');
     $('#' + activeSection).show();
+
+    // Fetch events only once on first click
+    if (activeSection === 'eventsSection' && !eventsFetched) {
+      renderEvents();
+      eventsFetched = true;
+    }
 
     if (activeSection === 'mediaSection') {  
       setTimeout(function() {
@@ -45,9 +48,25 @@ var renderContent = (images, youtubes, soundclouds) => {
       }, 500);    
     }
 
-    setTimeout(function () {
-      $('#primaryNavToggler').removeClass('show')
-    }, 200);
+    // replace manual removeClass('show') with proper Bootstrap collapse API
+    var $collapse = $('#primaryNavToggler');
+    var $toggler = $('.navbar-toggler');
+
+    if ($collapse.length) {
+      // request collapse hide (Bootstrap will animate)
+      $collapse.collapse('hide');
+
+      // when fully hidden ensure toggler returns to collapsed state / aria
+      $collapse.one('hidden.bs.collapse', function () {
+        $toggler.addClass('collapsed').attr('aria-expanded', 'false');
+      });
+
+      // as a safety fallback, force collapsed state shortly after click
+      setTimeout(function () {
+        $toggler.addClass('collapsed').attr('aria-expanded', 'false');
+        $collapse.removeClass('show');
+      }, 350);
+    }
 
     if (activeSection === 'gallerySection') {
       $grid.masonry('layout');
@@ -103,6 +122,45 @@ var renderContent = (images, youtubes, soundclouds) => {
 
 };
 
+var renderEvents = () => {
+  const appId = '817663ab377e14aae6be7b2c61a3bfd8';
+  const artistName = 'Katie Webster';
+  const apiUrl = `https://rest.bandsintown.com/artists/${encodeURIComponent(artistName)}/events?app_id=${appId}`;
+
+  $.ajax({
+    dataType: 'json',
+    url: apiUrl,
+    crossDomain: true,
+    success: function(events) {
+      if (events && events.length > 0) {
+        console.log('Fetched events:', events);
+        var eventsCollection = events.map((event) => {
+          const eventDate = new Date(event.datetime).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+          const venue = event.venue.name;
+          const city = event.venue.city;
+          const region = event.venue.region ? `, ${event.venue.region}` : '';
+          
+          return `<div class="event-item">
+                    <h4>${event.title || venue}</h4>
+                    <p><strong>${eventDate}</strong></p>
+                    <p>${venue}</p>
+                    <p>${city}${region}</p>
+                    ${event.description ? `<p>${event.description}</p>` : ''}
+                  </div>`;
+        });
+        $('.events-content').html(eventsCollection.join(''));
+      } else {
+        $('.events-content').html('<p>No upcoming events at this time.</p>');
+      }
+    },
+    error: function(err) {
+      console.error('Error fetching events:', err);
+      $('.events-content').html('<p>Unable to load events. Please try again later.</p>');
+    },
+    cache: false
+  });
+};
+
 $(function () {
   $('section').hide();
   $('#homeSection').show();
@@ -112,7 +170,7 @@ $(function () {
     url: "data/data.json",
     success: function(data) {
       const { images, youtubes, soundclouds } = data;
-      renderContent(images, youtubes, soundclouds);    
+      renderContent(images, youtubes, soundclouds);
     },
     error: function (err) {
       console.error(err)
@@ -120,6 +178,5 @@ $(function () {
     cache: false
   })
 
-  
   $('footer .year').text(currentYear);
 });
