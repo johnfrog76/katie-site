@@ -220,6 +220,12 @@ a:hover {
     color: var(--main-text-color);
 }
 
+.navbar-light .navbar-nav .nav-link:focus-visible {
+    color: var(--main-text-color);
+    outline: 2px solid var(--muted-border);
+    outline-offset: 2px;
+}
+
 /* make the navbar-toggler icon inverse / themed */
 .navbar-light .navbar-toggler {
     border-color: var(--muted-border);
@@ -549,10 +555,18 @@ footer ul li {
     }
 }
 
-/* 4:3 tiles for media items (modern browsers) */
-.media-section .video-content > *,
+/* 16:9 aspect ratio for YouTube videos */
+.media-section .video-content > * {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid var(--iframe-border-color);
+}
+
+/* 4:3 tiles for SoundCloud (modern browsers) */
 .media-section .soundcloud-content > * {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     width: 100%;
     overflow: hidden;
     background: #000;

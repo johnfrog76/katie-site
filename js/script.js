@@ -4,7 +4,7 @@ var eventsFetched = false;
 var renderContent = (images, youtubes, soundclouds) => {
   var random = _.shuffle(images);
   var videoCollection = youtubes.map((embedCode) => {
-    return `<iframe src="https://www.youtube.com/embed/${embedCode}"
+    return `<iframe class="youtube-item" data-embed="${embedCode}"
       frameborder="0"
       allow="autoplay;
       encrypted-media"
@@ -40,11 +40,27 @@ var renderContent = (images, youtubes, soundclouds) => {
 
     if (activeSection === 'mediaSection') {  
       setTimeout(function() {
-        $('.soundcloud-item').each(function(idx, element) {
-          const trackId = $(element).attr('data-track');
-          const template =`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`;
-          $(this).attr('src', template);
+        // Initialize YouTube videos on first load
+        $('.youtube-item').each(function(idx, element) {
+          const $iframe = $(this);
+          if (!$iframe.attr('src')) {
+            const embedCode = $iframe.attr('data-embed');
+            $iframe.attr('src', `https://www.youtube.com/embed/${embedCode}`);
+          }
         });
+        
+        // Initialize SoundCloud players on first load
+        $('.soundcloud-item').each(function(idx, element) {
+          const $iframe = $(this);
+          if (!$iframe.attr('src')) {
+            const trackId = $iframe.attr('data-track');
+            const template =`https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`;
+            $iframe.attr('src', template);
+          }
+        });
+        
+        // Trigger resize event for embeds to render properly
+        window.dispatchEvent(new Event('resize'));
       }, 500);    
     }
 
