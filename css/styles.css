@@ -105,6 +105,11 @@ a:link, a:visited {
     color: var(--main-hyperlink-color);
 }
 
+a:focus-visible {
+    outline: 1px dashed var(--main-hyperlink-color);
+    outline-offset: 2px;
+}
+
 a:hover {
     color: var(--main-hyperlink-color-hover); 
 }

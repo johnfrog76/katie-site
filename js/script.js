@@ -104,12 +104,12 @@ var renderContent = (images, youtubes, soundclouds) => {
     }
   });
 
-  $('.close, .opacity-layer').click(function () {
+  $('.close, .opacity-layer').on('click', function () {
     $('.pic-modal, .opacity-layer').hide();
     $('body').removeClass('modal-open');
   });
 
-  $('#prev, #next').click(function () {
+  $('#prev, #next').on('click', function () {
     var myAttr = $(this).attr('data-index');
     var type = $(this).attr('id');
     var idx = type === 'next' ? parseInt(myAttr) + 1 : parseInt(myAttr) - 1;
@@ -132,7 +132,7 @@ var renderContent = (images, youtubes, soundclouds) => {
       itemSelector: '.grid-item',
       columnWidth: 200,
       gutter: 10,
-      isFitWidth: true
+      isFitWidth: false
     });
   });
 
@@ -149,7 +149,6 @@ var renderEvents = () => {
     crossDomain: true,
     success: function(events) {
       if (events && events.length > 0) {
-        console.log('Fetched events:', events);
         var eventsCollection = events.map((event) => {
           const eventDate = new Date(event.datetime).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
           const eventDateObj = new Date(event.starts_at);
