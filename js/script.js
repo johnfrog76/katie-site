@@ -209,4 +209,15 @@ $(function () {
   })
 
   $('footer .year').text(currentYear);
+
+  // Handle orientation/viewport changes for Masonry layout
+  let resizeTimer;
+  $(window).on('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      if (typeof $grid !== 'undefined' && $grid && $grid.masonry) {
+        $grid.masonry('layout');
+      }
+    }, 250);
+  });
 });
