@@ -122,6 +122,10 @@ a:hover {
     margin-top: 1rem;
 }
 
+.link-scroll-top:focus {
+    box-shadow: none !important
+}
+
 .link-scroll-top:hover {
     color: var(--main-hyperlink-color-hover);
     text-decoration: none;
