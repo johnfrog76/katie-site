@@ -115,23 +115,20 @@ a:hover {
 }
 
 .link-scroll-top {
-    background: none;
-    border: none;
     color: var(--main-hyperlink-color);
-    cursor: pointer;
     font-size: 1.1rem;
     font-weight: 300;
     padding: 0.5rem 0;
     margin-top: 1rem;
-    text-decoration: none;
-    transition: color 0.2s ease;
 }
 
 .link-scroll-top:hover {
     color: var(--main-hyperlink-color-hover);
+    text-decoration: none;
 }
 
-.link-scroll-top:focus-visible {
+.link-scroll-top:focus {
+    box-shadow: none;
     outline: 1px dashed var(--main-hyperlink-color);
     outline-offset: 2px;
 }
