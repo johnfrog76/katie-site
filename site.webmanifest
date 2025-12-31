@@ -1,6 +1,9 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Katie Webster | Alto Saxophone",
+    "short_name": "Katie Webster",
+    "start_url": "/",
+    "description": "Bio, awards, press and video content for Katie Webster, alto saxophone player from Seattle WA.",
+    "categories": ["music", "entertainment"],
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -10,7 +13,24 @@
         {
             "src": "/android-chrome-512x512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/images/DSCF9346.jpg",
+            "sizes": "2048x1365",
+            "type": "image/jpeg",
+            "form_factor": "wide",
+            "label": "Katie Webster performing"
+        },
+        {
+            "src": "/images/IMG_0108.jpg",
+            "sizes": "673x1008",
+            "type": "image/jpeg",
+            "form_factor": "narrow",
+            "label": "Katie Webster portrait"
         }
     ],
     "theme_color": "#ffffff",
