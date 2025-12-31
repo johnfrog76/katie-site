@@ -210,6 +210,13 @@ $(function () {
 
   $('footer .year').text(currentYear);
 
+  // Scroll to top functionality
+  $('.link-scroll-top').on('click', function() {
+    $('html, body').animate({
+      scrollTop: 0
+    }, 600, 'swing');
+  });
+
   // Handle orientation/viewport changes for Masonry layout
   let resizeTimer;
   $(window).on('resize', function() {

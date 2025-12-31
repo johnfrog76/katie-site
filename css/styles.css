@@ -114,6 +114,29 @@ a:hover {
     color: var(--main-hyperlink-color-hover); 
 }
 
+.link-scroll-top {
+    color: var(--main-hyperlink-color);
+    font-size: 1.1rem;
+    font-weight: 300;
+    padding: 0.5rem 0;
+    margin-top: 1rem;
+}
+
+.link-scroll-top:hover {
+    color: var(--main-hyperlink-color-hover);
+    text-decoration: none;
+}
+
+.link-scroll-top:focus-visible {
+    box-shadow: none;
+    outline: 1px dashed var(--main-hyperlink-color);
+    outline-offset: 2px;
+}
+
+.link-scroll-top i {
+    margin-right: 0.25rem;
+}
+
 .navbar.bg-light {
     border-top: 1px solid var(--muted-border) !important;
     background-color: var(--nav-footer-bg-color) !important;
