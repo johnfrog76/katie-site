@@ -127,7 +127,7 @@ a:hover {
     text-decoration: none;
 }
 
-.link-scroll-top:focus {
+.link-scroll-top:focus-visible {
     box-shadow: none;
     outline: 1px dashed var(--main-hyperlink-color);
     outline-offset: 2px;
