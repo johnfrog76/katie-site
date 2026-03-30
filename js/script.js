@@ -38,7 +38,7 @@ const SiteController = {
     },
     // Feature flags
     FEATURES: {
-      EMAIL_SIGNUP_ENABLED: false  // Set to false to disable email signup
+      EMAIL_SIGNUP_ENABLED: false
     }
   },
 
