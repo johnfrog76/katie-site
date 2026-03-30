@@ -19,6 +19,7 @@
     --main-hyperlink-color: #64DD17; /* Material Light Green A700 */
     --main-h1-highlight-color: #fdd835; /* Material Yellow 500 */
     --main-heading-highlight-color: #fffde7; /* Material Yellow 100 */
+    --error-color: #f2643b;
 }
 
 html, body {
@@ -460,6 +461,10 @@ svg {
     padding-bottom: 1rem;
 }
 
+.hidden {
+    display: none !important;
+}
+
 @media (max-width: 595px) {
     .grid-item {
         width: 300px !important;
@@ -661,6 +666,54 @@ footer ul li {
 .event-item:hover {
     background-color: var(--main-30-opacity);
     border-color: var(--main-hyperlink-color);
+}
+
+hr {
+    border-top: 1px solid var(--muted-border);
+}
+
+.mailing-signup {
+    max-width: 500px;
+}
+
+.signup-fields {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.signup-fields .btn.btn-primary {
+    background-color: var(--main-hyperlink-color);
+    border: none !important;
+    box-shadow: none !important;
+}
+.signup-fields .btn.btn-primary:focus-visible, .signup-fields .btn.btn-primary:focus, .btn.btn-primary:active {
+    background-color: var(--main-hyperlink-color-hover) !important;
+}
+
+.signup-input {
+    color: var(--main-text-color);
+    padding: 2px 0.5rem;
+    background-color: var(--main-10-opacity);
+    border: 1px solid var(--iframe-border-color);
+    border-radius: 0.25rem;
+    flex: 1;
+    outline: none;
+}
+
+.signup-input:focus,
+.signup-input:focus-visible {
+    outline: none;
+    border: 1px solid var(--main-hyperlink-color-hover);
+}
+
+.signup-heading {
+    font-size: 0.85rem;
+    color: var(--footer-text-color);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
 }
 
 
