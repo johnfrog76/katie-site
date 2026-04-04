@@ -5,6 +5,7 @@
 const SiteController = {
   // Configuration constants
   CONFIG: {
+    DEFAULT_PAGE_TITLE: 'Katie Webster | Alto Saxophone',
     BANDSINTOWN_APP_ID: '817663ab377e14aae6be7b2c61a3bfd8',
     BANDSINTOWN_ARTIST_ID: '15626560',
     BANDSINTOWN_ENDPOINT: 'https://rest.bandsintown.com/artists',
@@ -35,6 +36,13 @@ const SiteController = {
       'mediaSection': 'media',
       'gallerySection': 'gallery',
       'eventsSection': 'events'
+    },
+    SECTION_TITLES: {
+      'homeSection': 'Katie Webster | Alto Saxophone',
+      'aboutSection': 'Katie Webster | About',
+      'mediaSection': 'Katie Webster | Media',
+      'gallerySection': 'Katie Webster | Gallery',
+      'eventsSection': 'Katie Webster | Events'
     },
     // Feature flags
     FEATURES: {
@@ -133,6 +141,7 @@ const SiteController = {
 
   navigateToSection: function(sectionId) {
     this.showSection(sectionId);
+    this.updatePageTitle(sectionId);
     this.closeNavbar();
 
     // Section-specific logic
@@ -380,6 +389,11 @@ const SiteController = {
 
   updateFooterYear: function() {
     $('footer .year').text(this.state.currentYear);
+  },
+
+  updatePageTitle: function(sectionId) {
+    const title = this.CONFIG.SECTION_TITLES[sectionId] || this.CONFIG.DEFAULT_PAGE_TITLE;
+    document.title = title;
   },
 
   handleMailingListSignup: function() {
