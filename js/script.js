@@ -86,8 +86,14 @@ const SiteController = {
       dataType: 'json',
       url: 'data/data.json',
       success: (data) => {
-        this.state.imageData = data;
-        this.renderContent(data.images, data.youtubes, data.soundclouds);
+        // Shuffle images once on load, store permanently
+        const shuffledImages = _.shuffle(data.images);
+        this.state.imageData = {
+          images: shuffledImages,
+          youtubes: data.youtubes,
+          soundclouds: data.soundclouds
+        };
+        this.renderContent(shuffledImages, data.youtubes, data.soundclouds);
       },
       error: (err) => console.error('Error loading content data:', err),
       cache: false
@@ -105,7 +111,6 @@ const SiteController = {
       const sectionId = $(evt.currentTarget).attr('data-id');
       const hash = this.CONFIG.SECTION_HASH_MAP[sectionId] || 'home';
       window.location.hash = hash;
-      this.navigateToSection(sectionId);
     });
 
     // Hash change
@@ -202,8 +207,7 @@ const SiteController = {
   // ============================================
 
   renderContent: function(images, youtubes, soundclouds) {
-    const shuffledImages = _.shuffle(images);
-    this.state.imageData = { images: shuffledImages, youtubes, soundclouds };
+    // Use pre-shuffled images (shuffled in loadContentData)
 
     // Render videos
     const videoHtml = youtubes.map((embedCode) => 
@@ -218,7 +222,7 @@ const SiteController = {
     $('.soundcloud-content').html(soundcloudHtml);
 
     // Render gallery
-    const galleryHtml = shuffledImages.map((image, idx) => {
+    const galleryHtml = images.map((image, idx) => {
       const cssClass = idx % 6 === 0 ? 'grid-item--width2' : '';
       return `<div class="grid-item ${cssClass}">
                 <img id="item-${idx}" src="images/${image}" alt="..." />
@@ -270,7 +274,7 @@ const SiteController = {
   initMasonry: function() {
     if (!this.state.$grid) {
       this.state.$grid = $('.grid').masonry(this.CONFIG.MASONRY_OPTIONS);
-    } else {
+    } else if (this.state.$grid && this.state.$grid.masonry) {
       this.state.$grid.masonry('layout');
     }
   },
@@ -294,10 +298,15 @@ const SiteController = {
   },
 
   handleModalNavigation: function(evt) {
-    const shuffledImages = this.state.imageData.images;
+    const shuffledImages = this.state.imageData?.images;
+    if (!shuffledImages || !shuffledImages.length) return;
+    
     let myAttr = $(evt.currentTarget).attr('data-index');
     let type = $(evt.currentTarget).attr('id');
-    let idx = type === 'next' ? parseInt(myAttr) + 1 : parseInt(myAttr) - 1;
+    let idx = parseInt(myAttr);
+    
+    if (isNaN(idx)) idx = 0;
+    idx = type === 'next' ? idx + 1 : idx - 1;
 
     // Wrap around
     if (idx === shuffledImages.length) idx = 0;
@@ -389,7 +398,7 @@ const SiteController = {
   handleWindowResize: function() {
     clearTimeout(this.state.resizeTimer);
     this.state.resizeTimer = setTimeout(() => {
-      if (this.state.$grid && this.state.$grid.masonry) {
+      if (this.state.$grid?.masonry) {
         this.state.$grid.masonry('layout');
       }
     }, this.CONFIG.TIMEOUTS.RESIZE_DEBOUNCE);
