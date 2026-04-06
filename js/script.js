@@ -11,6 +11,7 @@ const SiteController = {
     BANDSINTOWN_ENDPOINT: 'https://rest.bandsintown.com/artists',
     SOUNDCLOUD_PLAYER_URL: 'https://w.soundcloud.com/player/',
     YOUTUBE_CDN: 'https://www.youtube.com/embed/',
+    KIT_FORM_ENDPOINT: 'https://app.kit.com/forms/9264676/subscriptions',
     TIMEOUTS: {
       MEDIA_INIT: 500,
       MASONRY_INIT: 100,
@@ -143,6 +144,13 @@ const SiteController = {
     this.showSection(sectionId);
     this.updatePageTitle(sectionId);
     this.closeNavbar();
+
+    const sectionHash = this.CONFIG.SECTION_HASH_MAP[sectionId] || 'home';
+    const pageTitle = this.CONFIG.SECTION_TITLES[sectionId] || this.CONFIG.DEFAULT_PAGE_TITLE;
+    gtag('event', 'page_view', {
+      'page_path': `/#${sectionHash}`,
+      'page_title': pageTitle
+    });
 
     // Section-specific logic
     if (sectionId === 'eventsSection' && !this.state.eventsFetched) {
@@ -409,10 +417,13 @@ const SiteController = {
     $submit.prop('disabled', true).text('...');
 
     $.ajax({
-      url: 'https://app.kit.com/forms/9264676/subscriptions',
+      url: this.CONFIG.KIT_FORM_ENDPOINT,
       method: 'POST',
       data: { email_address: email },
       success: () => {
+        gtag('event', 'email_signup_success', {
+          'engagement_type': 'email_signup'
+        });
         $msg.text("Thanks — I'll keep you posted.").css('color', 'var(--main-hyperlink-color)');
         $('#ck-email').val('');
       },
