@@ -3,7 +3,6 @@
 // ============================================
 
 const SiteController = {
-  // Configuration constants
   CONFIG: {
     DEFAULT_PAGE_TITLE: 'Katie Webster | Alto Saxophone',
     BANDSINTOWN_APP_ID: '817663ab377e14aae6be7b2c61a3bfd8',
@@ -47,7 +46,9 @@ const SiteController = {
     },
     // Feature flags
     FEATURES: {
-      EMAIL_SIGNUP_ENABLED: true
+      EMAIL_SIGNUP_ENABLED: true,
+      BANDSINTOWN_API_ENABLED: true,
+      ANALYTICS_ENABLED: true
     }
   },
 
@@ -57,7 +58,8 @@ const SiteController = {
     eventsFetched: false,
     $grid: null,
     imageData: null,
-    resizeTimer: null
+    resizeTimer: null,
+    resizeAnimationId: null
   },
 
   // ============================================
@@ -94,6 +96,7 @@ const SiteController = {
           soundclouds: data.soundclouds
         };
         this.renderContent(shuffledImages, data.youtubes, data.soundclouds);
+        this.initMasonry();
       },
       error: (err) => console.error('Error loading content data:', err),
       cache: false
@@ -221,17 +224,20 @@ const SiteController = {
     ).join('');
     $('.soundcloud-content').html(soundcloudHtml);
 
-    // Render gallery
+    // Render gallery with error handling
     const galleryHtml = images.map((image, idx) => {
       const cssClass = idx % 6 === 0 ? 'grid-item--width2' : '';
-      return `<div class="grid-item ${cssClass}">
-                <img id="item-${idx}" src="images/${image}" alt="..." />
-              </div>`;
+      return `
+        <div class="grid-item ${cssClass}">
+          <img
+            id="item-${idx}"
+            src="images/${image}"
+            alt="..."
+            onerror="this.style.opacity='0.5'; this.style.cursor='not-allowed'; this.title='Image failed to load';"
+          />
+        </div>`;
     }).join('');
     $('.grid').html(galleryHtml);
-
-    // Initialize Masonry
-    setTimeout(() => this.initMasonry(), this.CONFIG.TIMEOUTS.MASONRY_INIT);
   },
 
   // ============================================
@@ -396,12 +402,16 @@ const SiteController = {
   },
 
   handleWindowResize: function() {
-    clearTimeout(this.state.resizeTimer);
-    this.state.resizeTimer = setTimeout(() => {
+    // Cancel previous resize animation
+    if (this.state.resizeAnimationId) {
+      cancelAnimationFrame(this.state.resizeAnimationId);
+    }
+
+    this.state.resizeAnimationId = requestAnimationFrame(() => {
       if (this.state.$grid?.masonry) {
         this.state.$grid.masonry('layout');
       }
-    }, this.CONFIG.TIMEOUTS.RESIZE_DEBOUNCE);
+    });
   },
 
   updateFooterYear: function() {
@@ -436,8 +446,14 @@ const SiteController = {
         $msg.text("Thanks — I'll keep you posted.").css('color', 'var(--main-hyperlink-color)');
         $('#ck-email').val('');
       },
-      error: () => {
-        $msg.text('Something went wrong. Please try again.').css('color', 'var(--error-color)');
+      error: (xhr, status, error) => {
+        console.error('Email signup error:', status, error);
+        gtag('event', 'email_signup_error', {
+          'error_type': status,
+          'error_message': error,
+          'engagement_type': 'email_signup'
+        });
+        $msg.text('Unable to process signup. Please try again or contact directly.').css('color', 'var(--error-color)');
       },
       complete: () => {
         $submit.prop('disabled', false).text('Sign Up');
