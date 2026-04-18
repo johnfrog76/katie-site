@@ -48,7 +48,7 @@ const SiteController = {
     FEATURES: {
       EMAIL_SIGNUP_ENABLED: true,
       BANDSINTOWN_API_ENABLED: true,
-      ANALYTICS_ENABLED: false
+      ANALYTICS_ENABLED: true
     },
     // DOM Selectors & Classes
     STRINGS: {
