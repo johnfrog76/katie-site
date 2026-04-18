@@ -12,7 +12,7 @@ const SiteController = {
     YOUTUBE_CDN: 'https://www.youtube.com/embed/',
     KIT_FORM_ENDPOINT: 'https://app.kit.com/forms/9264676/subscriptions',
     TIMEOUTS: {
-      MEDIA_INIT: 500,
+      MEDIA_INIT: 800,
       MASONRY_INIT: 100,
       NAVBAR_COLLAPSE: 350,
       RESIZE_DEBOUNCE: 250
@@ -48,7 +48,104 @@ const SiteController = {
     FEATURES: {
       EMAIL_SIGNUP_ENABLED: true,
       BANDSINTOWN_API_ENABLED: true,
-      ANALYTICS_ENABLED: true
+      ANALYTICS_ENABLED: false
+    },
+    // DOM Selectors & Classes
+    STRINGS: {
+      // Section IDs
+      SECTION_TAG: 'section',
+      HOME_SECTION: 'homeSection',
+      ABOUT_SECTION: 'aboutSection',
+      MEDIA_SECTION: 'mediaSection',
+      GALLERY_SECTION: 'gallerySection',
+      EVENTS_SECTION: 'eventsSection',
+      
+      // Navigation selectors
+      NAV_LINK: '.nav-link',
+      NAV_ITEM: '.nav-item',
+      NAVBAR_TOGGLER: '.navbar-toggler',
+      PRIMARY_NAV_TOGGLER: '#primaryNavToggler',
+      
+      // Gallery & modal selectors
+      GRID: '.grid',
+      GRID_ITEM: '.grid-item',
+      GRID_ITEM_WIDE: 'grid-item--width2',
+      GALLERY_IMG: '.grid img',
+      IMAGE_PREFIX: 'item-',
+      IMAGES_PATH: 'images/',
+      PIC_MODAL: '.pic-modal',
+      PIC_MODAL_INNER: '.pic-modal-inner',
+      OPACITY_LAYER: '.opacity-layer',
+      MODAL_PREV: '#prev',
+      MODAL_NEXT: '#next',
+      
+      // Media selectors
+      YOUTUBE_ITEM: '.youtube-item',
+      SOUNDCLOUD_ITEM: '.soundcloud-item',
+      VIDEO_CONTENT: '.video-content',
+      SOUNDCLOUD_CONTENT: '.soundcloud-content',
+      
+      // Events selectors
+      EVENTS_CONTENT: '.events-content',
+      
+      // Mailing list selectors
+      MAILING_SIGNUP: '.mailing-signup',
+      CK_EMAIL: '#ck-email',
+      CK_MESSAGE: '#ck-message',
+      CK_SUBMIT: '#ck-submit',
+      
+      // Utility selectors
+      FOOTER_YEAR: 'footer .year',
+      SCROLL_TOP_LINK: '.link-scroll-top',
+      BODY: 'body',
+      HTML_BODY: 'html, body',
+      
+      // CSS Classes
+      CLASS_ACTIVE: 'active',
+      CLASS_HIDDEN: 'hidden',
+      CLASS_COLLAPSED: 'collapsed',
+      CLASS_SHOW: 'show',
+      CLASS_MODAL_OPEN: 'modal-open',
+      
+      // HTML Attributes & Events
+      ATTR_DATA_ID: 'data-id',
+      ATTR_DATA_INDEX: 'data-index',
+      ATTR_DATA_EMBED: 'data-embed',
+      ATTR_DATA_TRACK: 'data-track',
+      ATTR_ARIA_EXPANDED: 'aria-expanded',
+      ATTR_FALSE: 'false',
+      
+      // Events
+      EVENT_HASHCHANGE: 'hashchange',
+      EVENT_RESIZE: 'resize',
+      EVENT_HIDDEN_COLLAPSE: 'hidden.bs.collapse',
+      EVENT_PAGE_VIEW: 'page_view',
+      EVENT_EMAIL_SIGNUP_SUCCESS: 'email_signup_success',
+      EVENT_EMAIL_SIGNUP_ERROR: 'email_signup_error',
+      
+      // Animation
+      ANIMATION_SWING: 'swing',
+      DEFAULT_HASH: 'home',
+      
+      // Data & API
+      DATA_URL: 'data/data.json',
+      DATA_TYPE: 'json',
+      
+      // Error messages
+      ERROR_LOADING_DATA: 'Error loading content data:',
+      ERROR_LOADING_EVENTS: 'Unable to load events. Please try again later.',
+      NO_UPCOMING_EVENTS: 'No upcoming events at this time.',
+      EMAIL_SIGNUP_SUCCESS: `Thanks — I'll keep you posted.`,
+      EMAIL_SIGNUP_ERROR: 'Unable to process signup. Please try again or contact directly.',
+      EMAIL_INVALID: 'Please enter a valid email address',
+      
+      // CSS Variables
+      CSS_ERROR_COLOR: 'var(--error-color)',
+      CSS_SUCCESS_COLOR: 'var(--main-hyperlink-color)',
+      
+      // Localization
+      LOCALE: 'en-US',
+      TIMEZONE_NY: 'America/New_York'
     }
   },
 
@@ -74,19 +171,19 @@ const SiteController = {
   },
 
   setupInitialView: function() {
-    $('section').hide();
+    $(this.CONFIG.STRINGS.SECTION_TAG).hide();
     
     if (window.location.hash) {
       this.handleHashNavigation();
     } else {
-      this.showSection('homeSection');
+      this.showSection(this.CONFIG.STRINGS.HOME_SECTION);
     }
   },
 
   loadContentData: function() {
     $.ajax({
-      dataType: 'json',
-      url: 'data/data.json',
+      dataType: this.CONFIG.STRINGS.DATA_TYPE,
+      url: this.CONFIG.STRINGS.DATA_URL,
       success: (data) => {
         // Shuffle images once on load, store permanently
         const shuffledImages = _.shuffle(data.images);
@@ -98,7 +195,7 @@ const SiteController = {
         this.renderContent(shuffledImages, data.youtubes, data.soundclouds);
         this.initMasonry();
       },
-      error: (err) => console.error('Error loading content data:', err),
+      error: (err) => console.error(this.CONFIG.STRINGS.ERROR_LOADING_DATA, err),
       cache: false
     });
   },
@@ -109,38 +206,38 @@ const SiteController = {
 
   setupEventListeners: function() {
     // Navigation links
-    $(document).on('click', '.nav-link', (evt) => {
+    $(document).on('click', this.CONFIG.STRINGS.NAV_LINK, (evt) => {
       evt.preventDefault();
-      const sectionId = $(evt.currentTarget).attr('data-id');
-      const hash = this.CONFIG.SECTION_HASH_MAP[sectionId] || 'home';
+      const sectionId = $(evt.currentTarget).attr(this.CONFIG.STRINGS.ATTR_DATA_ID);
+      const hash = this.CONFIG.SECTION_HASH_MAP[sectionId] || this.CONFIG.STRINGS.DEFAULT_HASH;
       window.location.hash = hash;
     });
 
     // Hash change
-    $(window).on('hashchange', () => this.handleHashNavigation());
+    $(window).on(this.CONFIG.STRINGS.EVENT_HASHCHANGE, () => this.handleHashNavigation());
 
     // Gallery image clicks
-    $(document).on('click', '.grid img', (evt) => this.handleGalleryImageClick(evt));
+    $(document).on('click', this.CONFIG.STRINGS.GALLERY_IMG, (evt) => this.handleGalleryImageClick(evt));
 
     // Modal close
-    $(document).on('click', '.close, .opacity-layer', () => this.closeModal());
+    $(document).on('click', `.close, ${this.CONFIG.STRINGS.OPACITY_LAYER}`, () => this.closeModal());
 
     // Modal navigation
-    $(document).on('click', '#prev, #next', (evt) => this.handleModalNavigation(evt));
+    $(document).on('click', `${this.CONFIG.STRINGS.MODAL_PREV}, ${this.CONFIG.STRINGS.MODAL_NEXT}`, (evt) => this.handleModalNavigation(evt));
 
     // Scroll to top
-    $(document).on('click', '.link-scroll-top', () => this.scrollToTop());
+    $(document).on('click', this.CONFIG.STRINGS.SCROLL_TOP_LINK, () => this.scrollToTop());
 
     // Window resize
-    $(window).on('resize', () => this.handleWindowResize());
+    $(window).on(this.CONFIG.STRINGS.EVENT_RESIZE, () => this.handleWindowResize());
 
     // Mailing list signup (only if enabled)
     if (this.CONFIG.FEATURES.EMAIL_SIGNUP_ENABLED) {
-      $('.mailing-signup').removeClass('hidden');
-      $(document).on('click', '#ck-submit', () => this.handleMailingListSignup());
+      $(this.CONFIG.STRINGS.MAILING_SIGNUP).removeClass(this.CONFIG.STRINGS.CLASS_HIDDEN);
+      $(document).on('click', this.CONFIG.STRINGS.CK_SUBMIT, () => this.handleMailingListSignup());
     } else {
       // Hide the signup form if disabled
-      $('.mailing-signup').addClass('hidden');
+      $(this.CONFIG.STRINGS.MAILING_SIGNUP).addClass(this.CONFIG.STRINGS.CLASS_HIDDEN);
     }
   },
 
@@ -153,54 +250,54 @@ const SiteController = {
     this.updatePageTitle(sectionId);
     this.closeNavbar();
 
-    const sectionHash = this.CONFIG.SECTION_HASH_MAP[sectionId] || 'home';
+    const sectionHash = this.CONFIG.SECTION_HASH_MAP[sectionId] || this.CONFIG.STRINGS.DEFAULT_HASH;
     const pageTitle = this.CONFIG.SECTION_TITLES[sectionId] || this.CONFIG.DEFAULT_PAGE_TITLE;
-    gtag('event', 'page_view', {
+    gtag('event', this.CONFIG.STRINGS.EVENT_PAGE_VIEW, {
       'page_path': `/#${sectionHash}`,
       'page_title': pageTitle
     });
 
     // Section-specific logic
-    if (sectionId === 'eventsSection' && !this.state.eventsFetched) {
+    if (sectionId === this.CONFIG.STRINGS.EVENTS_SECTION && !this.state.eventsFetched) {
       this.loadEvents();
       this.state.eventsFetched = true;
     }
 
-    if (sectionId === 'mediaSection') {
+    if (sectionId === this.CONFIG.STRINGS.MEDIA_SECTION) {
       this.initializeMedia();
     }
 
-    if (sectionId === 'gallerySection') {
+    if (sectionId === this.CONFIG.STRINGS.GALLERY_SECTION) {
       this.layoutMasonry();
     }
   },
 
   handleHashNavigation: function() {
     const hash = window.location.hash.slice(1);
-    const sectionId = this.CONFIG.HASH_MAP[hash] || 'homeSection';
+    const sectionId = this.CONFIG.HASH_MAP[hash] || this.CONFIG.STRINGS.HOME_SECTION;
     this.navigateToSection(sectionId);
   },
 
   showSection: function(sectionId) {
-    $('section').hide();
-    $('.nav-item').removeClass('active');
-    $(`[data-id="${sectionId}"]`).parent('li').addClass('active');
+    $(this.CONFIG.STRINGS.SECTION_TAG).hide();
+    $(this.CONFIG.STRINGS.NAV_ITEM).removeClass(this.CONFIG.STRINGS.CLASS_ACTIVE);
+    $(`[${this.CONFIG.STRINGS.ATTR_DATA_ID}="${sectionId}"]`).parent('li').addClass(this.CONFIG.STRINGS.CLASS_ACTIVE);
     $(`#${sectionId}`).show();
   },
 
   closeNavbar: function() {
-    const $collapse = $('#primaryNavToggler');
-    const $toggler = $('.navbar-toggler');
+    const $collapse = $(this.CONFIG.STRINGS.PRIMARY_NAV_TOGGLER);
+    const $toggler = $(this.CONFIG.STRINGS.NAVBAR_TOGGLER);
 
     if ($collapse.length) {
       $collapse.collapse('hide');
-      $collapse.one('hidden.bs.collapse', () => {
-        $toggler.addClass('collapsed').attr('aria-expanded', 'false');
+      $collapse.one(this.CONFIG.STRINGS.EVENT_HIDDEN_COLLAPSE, () => {
+        $toggler.addClass(this.CONFIG.STRINGS.CLASS_COLLAPSED).attr(this.CONFIG.STRINGS.ATTR_ARIA_EXPANDED, this.CONFIG.STRINGS.ATTR_FALSE);
       });
 
       setTimeout(() => {
-        $toggler.addClass('collapsed').attr('aria-expanded', 'false');
-        $collapse.removeClass('show');
+        $toggler.addClass(this.CONFIG.STRINGS.CLASS_COLLAPSED).attr(this.CONFIG.STRINGS.ATTR_ARIA_EXPANDED, this.CONFIG.STRINGS.ATTR_FALSE);
+        $collapse.removeClass(this.CONFIG.STRINGS.CLASS_SHOW);
       }, this.CONFIG.TIMEOUTS.NAVBAR_COLLAPSE);
     }
   },
@@ -214,30 +311,30 @@ const SiteController = {
 
     // Render videos
     const videoHtml = youtubes.map((embedCode) => 
-      `<iframe class="youtube-item" data-embed="${embedCode}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
+      `<iframe class="${this.CONFIG.STRINGS.YOUTUBE_ITEM.slice(1)}" ${this.CONFIG.STRINGS.ATTR_DATA_EMBED}="${embedCode}" frameborder="0" allow="autoplay" allowfullscreen></iframe>`
     ).join('');
-    $('.video-content').html(videoHtml);
+    $(this.CONFIG.STRINGS.VIDEO_CONTENT).html(videoHtml);
 
     // Render SoundCloud
     const soundcloudHtml = soundclouds.map((trackId) =>
-      `<iframe class="soundcloud-item" data-track="${trackId}" frameborder="0"></iframe>`
+      `<iframe class="${this.CONFIG.STRINGS.SOUNDCLOUD_ITEM.slice(1)}" ${this.CONFIG.STRINGS.ATTR_DATA_TRACK}="${trackId}" frameborder="0"></iframe>`
     ).join('');
-    $('.soundcloud-content').html(soundcloudHtml);
+    $(this.CONFIG.STRINGS.SOUNDCLOUD_CONTENT).html(soundcloudHtml);
 
     // Render gallery with error handling
     const galleryHtml = images.map((image, idx) => {
-      const cssClass = idx % 6 === 0 ? 'grid-item--width2' : '';
+      const cssClass = idx % 6 === 0 ? this.CONFIG.STRINGS.GRID_ITEM_WIDE : '';
       return `
         <div class="grid-item ${cssClass}">
           <img
-            id="item-${idx}"
-            src="images/${image}"
+            id="${this.CONFIG.STRINGS.IMAGE_PREFIX}${idx}"
+            src="${this.CONFIG.STRINGS.IMAGES_PATH}${image}"
             alt="..."
             onerror="this.style.opacity='0.5'; this.style.cursor='not-allowed'; this.title='Image failed to load';"
           />
         </div>`;
     }).join('');
-    $('.grid').html(galleryHtml);
+    $(this.CONFIG.STRINGS.GRID).html(galleryHtml);
   },
 
   // ============================================
@@ -253,20 +350,20 @@ const SiteController = {
   },
 
   loadYouTubeIframes: function() {
-    $('.youtube-item').each((idx, element) => {
+    $(this.CONFIG.STRINGS.YOUTUBE_ITEM).each((idx, element) => {
       const $iframe = $(element);
       if (!$iframe.attr('src')) {
-        const embedCode = $iframe.attr('data-embed');
+        const embedCode = $iframe.attr(this.CONFIG.STRINGS.ATTR_DATA_EMBED);
         $iframe.attr('src', `${this.CONFIG.YOUTUBE_CDN}${embedCode}`);
       }
     });
   },
 
   loadSoundCloudIframes: function() {
-    $('.soundcloud-item').each((idx, element) => {
+    $(this.CONFIG.STRINGS.SOUNDCLOUD_ITEM).each((idx, element) => {
       const $iframe = $(element);
       if (!$iframe.attr('src')) {
-        const trackId = $iframe.attr('data-track');
+        const trackId = $iframe.attr(this.CONFIG.STRINGS.ATTR_DATA_TRACK);
         const src = `${this.CONFIG.SOUNDCLOUD_PLAYER_URL}?url=https%3A//api.soundcloud.com/tracks/${trackId}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`;
         $iframe.attr('src', src);
       }
@@ -291,41 +388,41 @@ const SiteController = {
 
   handleGalleryImageClick: function(evt) {
     const shuffledImages = this.state.imageData.images;
-    let str = evt.currentTarget.id.replace('item-', '');
+    let str = evt.currentTarget.id.replace(this.CONFIG.STRINGS.IMAGE_PREFIX, '');
     let idx = parseInt(str);
     
-    $('.pic-modal').css('display', 'flex');
-    $('body').addClass('modal-open');
-    $('.opacity-layer').show();
+    $(this.CONFIG.STRINGS.PIC_MODAL).css('display', 'flex');
+    $(this.CONFIG.STRINGS.BODY).addClass(this.CONFIG.STRINGS.CLASS_MODAL_OPEN);
+    $(this.CONFIG.STRINGS.OPACITY_LAYER).show();
     
-    const template = `<img alt="..." src="images/${shuffledImages[idx]}" />`;
-    $('.pic-modal-inner').html(template);
-    $('#prev, #next').attr('data-index', str);
+    const template = `<img alt="..." src="${this.CONFIG.STRINGS.IMAGES_PATH}${shuffledImages[idx]}" />`;
+    $(this.CONFIG.STRINGS.PIC_MODAL_INNER).html(template);
+    $(`${this.CONFIG.STRINGS.MODAL_PREV}, ${this.CONFIG.STRINGS.MODAL_NEXT}`).attr(this.CONFIG.STRINGS.ATTR_DATA_INDEX, str);
   },
 
   handleModalNavigation: function(evt) {
     const shuffledImages = this.state.imageData?.images;
     if (!shuffledImages || !shuffledImages.length) return;
     
-    let myAttr = $(evt.currentTarget).attr('data-index');
+    let myAttr = $(evt.currentTarget).attr(this.CONFIG.STRINGS.ATTR_DATA_INDEX);
     let type = $(evt.currentTarget).attr('id');
     let idx = parseInt(myAttr);
     
     if (isNaN(idx)) idx = 0;
-    idx = type === 'next' ? idx + 1 : idx - 1;
+    idx = type === this.CONFIG.STRINGS.MODAL_NEXT.slice(1) ? idx + 1 : idx - 1;
 
     // Wrap around
     if (idx === shuffledImages.length) idx = 0;
     if (idx < 0) idx = shuffledImages.length - 1;
 
-    const template = `<img alt="..." src="images/${shuffledImages[idx]}" />`;
-    $('.pic-modal-inner').html(template);
-    $('#prev, #next').attr('data-index', idx);
+    const template = `<img alt="..." src="${this.CONFIG.STRINGS.IMAGES_PATH}${shuffledImages[idx]}" />`;
+    $(this.CONFIG.STRINGS.PIC_MODAL_INNER).html(template);
+    $(`${this.CONFIG.STRINGS.MODAL_PREV}, ${this.CONFIG.STRINGS.MODAL_NEXT}`).attr(this.CONFIG.STRINGS.ATTR_DATA_INDEX, idx);
   },
 
   closeModal: function() {
-    $('.pic-modal, .opacity-layer').hide();
-    $('body').removeClass('modal-open');
+    $(`${this.CONFIG.STRINGS.PIC_MODAL}, ${this.CONFIG.STRINGS.OPACITY_LAYER}`).hide();
+    $(this.CONFIG.STRINGS.BODY).removeClass(this.CONFIG.STRINGS.CLASS_MODAL_OPEN);
   },
 
   // ============================================
@@ -336,13 +433,12 @@ const SiteController = {
     const apiUrl = `${this.CONFIG.BANDSINTOWN_ENDPOINT}/id_${this.CONFIG.BANDSINTOWN_ARTIST_ID}/events?app_id=${this.CONFIG.BANDSINTOWN_APP_ID}&date=upcoming`;
 
     $.ajax({
-      dataType: 'json',
+      dataType: this.CONFIG.STRINGS.DATA_TYPE,
       url: apiUrl,
       crossDomain: true,
       success: (events) => this.renderEvents(events),
-      error: (err) => {
-        console.error('Error fetching events:', err);
-        $('.events-content').html('<p>Unable to load events. Please try again later.</p>');
+      error: () => {
+        $(this.CONFIG.STRINGS.EVENTS_CONTENT).html(`<p>${this.CONFIG.STRINGS.ERROR_LOADING_EVENTS}</p>`);
       },
       cache: false
     });
@@ -350,30 +446,30 @@ const SiteController = {
 
   renderEvents: function(events) {
     if (!events || events.length === 0) {
-      $('.events-content').html('<p>No upcoming events at this time.</p>');
+      $(this.CONFIG.STRINGS.EVENTS_CONTENT).html(`<p>${this.CONFIG.STRINGS.NO_UPCOMING_EVENTS}</p>`);
       return;
     }
 
     const eventsHtml = events.map((event) => this.formatEventItem(event)).join('');
-    $('.events-content').html(eventsHtml);
+    $(this.CONFIG.STRINGS.EVENTS_CONTENT).html(eventsHtml);
   },
 
   formatEventItem: function(event) {
-    const eventDate = new Date(event.datetime).toLocaleDateString('en-US', { 
+    const eventDate = new Date(event.datetime).toLocaleDateString(this.CONFIG.STRINGS.LOCALE, { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     });
     
     const eventDateObj = new Date(event.starts_at);
-    const startTime = eventDateObj.toLocaleTimeString('en-US', { 
+    const startTime = eventDateObj.toLocaleTimeString(this.CONFIG.STRINGS.LOCALE, { 
       hour: '2-digit', 
       minute: '2-digit', 
       hour12: true 
     });
     
-    const tzString = eventDateObj.toLocaleString('en-US', { 
-      timeZone: 'America/New_York',
+    const tzString = eventDateObj.toLocaleString(this.CONFIG.STRINGS.LOCALE, { 
+      timeZone: this.CONFIG.STRINGS.TIMEZONE_NY,
       timeZoneName: 'short'
     });
     const tzName = tzString.split(' ').pop();
@@ -398,7 +494,7 @@ const SiteController = {
   // ============================================
 
   scrollToTop: function() {
-    $('html, body').animate({ scrollTop: 0 }, 600, 'swing');
+    $(this.CONFIG.STRINGS.HTML_BODY).animate({ scrollTop: 0 }, 600, this.CONFIG.STRINGS.ANIMATION_SWING);
   },
 
   handleWindowResize: function() {
@@ -415,7 +511,7 @@ const SiteController = {
   },
 
   updateFooterYear: function() {
-    $('footer .year').text(this.state.currentYear);
+    $(this.CONFIG.STRINGS.FOOTER_YEAR).text(this.state.currentYear);
   },
 
   updatePageTitle: function(sectionId) {
@@ -424,12 +520,12 @@ const SiteController = {
   },
 
   handleMailingListSignup: function() {
-    const email = $('#ck-email').val().trim();
-    const $msg = $('#ck-message');
-    const $submit = $('#ck-submit');
+    const email = $(this.CONFIG.STRINGS.CK_EMAIL).val().trim();
+    const $msg = $(this.CONFIG.STRINGS.CK_MESSAGE);
+    const $submit = $(this.CONFIG.STRINGS.CK_SUBMIT);
 
     if (!email || !email.includes('@')) {
-      $msg.text('Please enter a valid email address').css('color', 'var(--error-color)');
+      $msg.text(this.CONFIG.STRINGS.EMAIL_INVALID).css('color', this.CONFIG.STRINGS.CSS_ERROR_COLOR);
       return;
     }
 
@@ -440,20 +536,20 @@ const SiteController = {
       method: 'POST',
       data: { email_address: email },
       success: () => {
-        gtag('event', 'email_signup_success', {
+        gtag('event', this.CONFIG.STRINGS.EVENT_EMAIL_SIGNUP_SUCCESS, {
           'engagement_type': 'email_signup'
         });
-        $msg.text("Thanks — I'll keep you posted.").css('color', 'var(--main-hyperlink-color)');
-        $('#ck-email').val('');
+        $msg.text(this.CONFIG.STRINGS.EMAIL_SIGNUP_SUCCESS).css('color', this.CONFIG.STRINGS.CSS_SUCCESS_COLOR);
+        $(this.CONFIG.STRINGS.CK_EMAIL).val('');
       },
       error: (xhr, status, error) => {
         console.error('Email signup error:', status, error);
-        gtag('event', 'email_signup_error', {
+        gtag('event', this.CONFIG.STRINGS.EVENT_EMAIL_SIGNUP_ERROR, {
           'error_type': status,
           'error_message': error,
           'engagement_type': 'email_signup'
         });
-        $msg.text('Unable to process signup. Please try again or contact directly.').css('color', 'var(--error-color)');
+        $msg.text(this.CONFIG.STRINGS.EMAIL_SIGNUP_ERROR).css('color', this.CONFIG.STRINGS.CSS_ERROR_COLOR);
       },
       complete: () => {
         $submit.prop('disabled', false).text('Sign Up');
